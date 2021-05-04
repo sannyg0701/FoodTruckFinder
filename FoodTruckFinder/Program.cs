@@ -58,8 +58,10 @@ namespace FoodTruckFinder
           }
         }
       }
+
       Console.WriteLine("\n");
-      Console.WriteLine("Enjoy....");
+      Console.WriteLine("Enjoy....Press any key to exit.");
+      Console.ReadKey();
     }
   }
 }
