@@ -38,12 +38,12 @@ namespace FoodTruckFinder
                 foreach (var foodTruckInfo in foodTruckInfos)
                 {
                     Console.WriteLine($"Food truck {foodTruckInfo.Name} is located at {foodTruckInfo.Location.Address} and has {string.Join(",", foodTruckInfo.Items)} on the menu.");
+                    Console.WriteLine("\n");
                 }
 
                 foodTruckInfosCount = foodTruckInfos.Count;
                 if (foodTruckInfosCount < 5)
                 {
-                    Console.WriteLine("\n");
                     Console.WriteLine("Less than 5 food trucks were found in the specified area. Would you like to expand your search?[y/n]");
                     switch (Console.ReadKey(false).Key)
                     {

@@ -33,7 +33,6 @@ namespace FoodTruckFinder.Service.Impl
 
             if (foodTruckInfoJsonResponses == null || !foodTruckInfoJsonResponses.Any())
             {
-                Console.WriteLine("No food trucks found in the specified area. Please try expanding your search.");
                 return foodTruckInfos;
             }
 
