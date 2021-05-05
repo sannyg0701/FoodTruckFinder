@@ -11,45 +11,45 @@ using System.Threading.Tasks;
 
 namespace FoodTruckFinder.Tests.Unit.Server.Impl
 {
-  [TestClass]
-  public class FoodTruckInfoServiceTests
-  {
-    private Mock<IFoodTruckInfoRepository> _foodTruckRepositoryMock = new Mock<IFoodTruckInfoRepository>();
-
-    [TestMethod]
-    public void ConstructorThrowsArgumentNullExceptionWhenFoodTruckInfoRepositoryIsNull()
+    [TestClass]
+    public class FoodTruckInfoServiceTests
     {
-      FluentActions.Invoking(() => new FoodTruckInfoService(null)).Should().Throw<ArgumentNullException>();
-    }
+        private Mock<IFoodTruckInfoRepository> _foodTruckRepositoryMock = new Mock<IFoodTruckInfoRepository>();
 
-    [TestMethod]
-    public async Task GetFoodTruckInfoReturnsEmptyListWhenFoodTruckInfoJsonResponseIsNull()
-    {
-      _foodTruckRepositoryMock.Setup(_ => _.GetFoodTruckInfoJson(It.IsAny<double>(), It.IsAny<double>()))
-        .ReturnsAsync((List<FoodTruckInfoJsonResponse>)null);
+        [TestMethod]
+        public void ConstructorThrowsArgumentNullExceptionWhenFoodTruckInfoRepositoryIsNull()
+        {
+            FluentActions.Invoking(() => new FoodTruckInfoService(null)).Should().Throw<ArgumentNullException>();
+        }
 
-      var service = new FoodTruckInfoService(_foodTruckRepositoryMock.Object);
-      var actual = await service.GetFoodTruckInfos(1, 2);
+        [TestMethod]
+        public async Task GetFoodTruckInfoReturnsEmptyListWhenFoodTruckInfoJsonResponseIsNull()
+        {
+            _foodTruckRepositoryMock.Setup(_ => _.GetFoodTruckInfoJson(It.IsAny<double>(), It.IsAny<double>()))
+              .ReturnsAsync((List<FoodTruckInfoJsonResponse>)null);
 
-      actual.Should().BeEmpty();
-    }
+            var service = new FoodTruckInfoService(_foodTruckRepositoryMock.Object);
+            var actual = await service.GetFoodTruckInfos(1, 2);
 
-    [TestMethod]
-    public async Task GetFoodTruckInfoReturnsEmptyListWhenFoodTruckInfoJsonResponseIsEmpty()
-    {
-      _foodTruckRepositoryMock.Setup(_ => _.GetFoodTruckInfoJson(It.IsAny<double>(), It.IsAny<double>()))
-        .ReturnsAsync(new List<FoodTruckInfoJsonResponse>());
+            actual.Should().BeEmpty();
+        }
 
-      var service = new FoodTruckInfoService(_foodTruckRepositoryMock.Object);
-      var actual = await service.GetFoodTruckInfos(1, 2);
+        [TestMethod]
+        public async Task GetFoodTruckInfoReturnsEmptyListWhenFoodTruckInfoJsonResponseIsEmpty()
+        {
+            _foodTruckRepositoryMock.Setup(_ => _.GetFoodTruckInfoJson(It.IsAny<double>(), It.IsAny<double>()))
+              .ReturnsAsync(new List<FoodTruckInfoJsonResponse>());
 
-      actual.Should().BeEmpty();
-    }
+            var service = new FoodTruckInfoService(_foodTruckRepositoryMock.Object);
+            var actual = await service.GetFoodTruckInfos(1, 2);
 
-    [TestMethod]
-    public async Task GetFoodTruckInfoReturnsFoodTruckInfos()
-    {
-      var foodTruckInfoJsonResponses = new List<FoodTruckInfoJsonResponse>
+            actual.Should().BeEmpty();
+        }
+
+        [TestMethod]
+        public async Task GetFoodTruckInfoReturnsFoodTruckInfos()
+        {
+            var foodTruckInfoJsonResponses = new List<FoodTruckInfoJsonResponse>
       {
         new FoodTruckInfoJsonResponse
         {
@@ -69,28 +69,28 @@ namespace FoodTruckFinder.Tests.Unit.Server.Impl
         }
       };
 
-      var expected = new List<FoodTruckInfo>();
-      foreach (var foodTruckInfoJsonResponse in foodTruckInfoJsonResponses)
-      {
-        expected.Add(new FoodTruckInfo
-        {
-          Items = foodTruckInfoJsonResponse.FoodItems.Split(":").ToList(),
-          Name = foodTruckInfoJsonResponse.Applicant,
-          Location = new Location
-          {
-            Address = foodTruckInfoJsonResponse.Address,
-            Description = foodTruckInfoJsonResponse.LocationDescription
-          }
-        });
-      }
+            var expected = new List<FoodTruckInfo>();
+            foreach (var foodTruckInfoJsonResponse in foodTruckInfoJsonResponses)
+            {
+                expected.Add(new FoodTruckInfo
+                {
+                    Items = foodTruckInfoJsonResponse.FoodItems.Split(":").ToList(),
+                    Name = foodTruckInfoJsonResponse.Applicant,
+                    Location = new Location
+                    {
+                        Address = foodTruckInfoJsonResponse.Address,
+                        Description = foodTruckInfoJsonResponse.LocationDescription
+                    }
+                });
+            }
 
-      _foodTruckRepositoryMock.Setup(_ => _.GetFoodTruckInfoJson(It.IsAny<double>(), It.IsAny<double>()))
-        .ReturnsAsync(foodTruckInfoJsonResponses);
+            _foodTruckRepositoryMock.Setup(_ => _.GetFoodTruckInfoJson(It.IsAny<double>(), It.IsAny<double>()))
+              .ReturnsAsync(foodTruckInfoJsonResponses);
 
-      var service = new FoodTruckInfoService(_foodTruckRepositoryMock.Object);
-      var actual = await service.GetFoodTruckInfos(1, 2);
+            var service = new FoodTruckInfoService(_foodTruckRepositoryMock.Object);
+            var actual = await service.GetFoodTruckInfos(1, 2);
 
-      actual.Should().BeEquivalentTo(expected);
+            actual.Should().BeEquivalentTo(expected);
+        }
     }
-  }
 }

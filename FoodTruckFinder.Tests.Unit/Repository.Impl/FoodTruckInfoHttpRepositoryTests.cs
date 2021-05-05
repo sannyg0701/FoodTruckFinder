@@ -17,28 +17,28 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace FoodTruckFinder.Tests.Unit.Repository.Impl
 {
-  [TestClass]
-  public class FoodTruckInfoHttpRepositoryTests
-  {
-    private Mock<IHttpClientFactory> _httpClientFactoryMock = new Mock<IHttpClientFactory>();
-    private readonly Mock<DelegatingHandler> _clientHandlerMock = new Mock<DelegatingHandler>();
-
-    [TestMethod]
-    public void ConstructorThrowsArgumentNullExceptionWhenConfigurationIsNull()
+    [TestClass]
+    public class FoodTruckInfoHttpRepositoryTests
     {
-      FluentActions.Invoking(() => new FoodTruckInfoHttpRepository(null, _httpClientFactoryMock.Object)).Should().Throw<ArgumentNullException>();
-    }
+        private Mock<IHttpClientFactory> _httpClientFactoryMock = new Mock<IHttpClientFactory>();
+        private readonly Mock<DelegatingHandler> _clientHandlerMock = new Mock<DelegatingHandler>();
 
-    [TestMethod]
-    public void ConstructorThrowsArgumentNullExceptionWhenClientFactoryIsNull()
-    {
-      FluentActions.Invoking(() => new FoodTruckInfoHttpRepository(new FoodTruckFinderConfig(), null)).Should().Throw<ArgumentNullException>();
-    }
+        [TestMethod]
+        public void ConstructorThrowsArgumentNullExceptionWhenConfigurationIsNull()
+        {
+            FluentActions.Invoking(() => new FoodTruckInfoHttpRepository(null, _httpClientFactoryMock.Object)).Should().Throw<ArgumentNullException>();
+        }
 
-    [TestMethod]
-    public async Task GetFoodTruckInfoJsonReturnsFoodTruckInfoJsonResponse()
-    {
-      var foodTruckInfoJsonResponses = new List<FoodTruckInfoJsonResponse>
+        [TestMethod]
+        public void ConstructorThrowsArgumentNullExceptionWhenClientFactoryIsNull()
+        {
+            FluentActions.Invoking(() => new FoodTruckInfoHttpRepository(new FoodTruckFinderConfig(), null)).Should().Throw<ArgumentNullException>();
+        }
+
+        [TestMethod]
+        public async Task GetFoodTruckInfoJsonReturnsFoodTruckInfoJsonResponse()
+        {
+            var foodTruckInfoJsonResponses = new List<FoodTruckInfoJsonResponse>
       {
         new FoodTruckInfoJsonResponse
         {
@@ -57,82 +57,82 @@ namespace FoodTruckFinder.Tests.Unit.Repository.Impl
           LocationDescription = "Right across from 456 tower."
         }
       };
-      var response = new HttpResponseMessage(HttpStatusCode.OK)
-      {
-        Content = new StringContent(JsonConvert.SerializeObject(foodTruckInfoJsonResponses), Encoding.UTF8, "application/json")
-      };
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(foodTruckInfoJsonResponses), Encoding.UTF8, "application/json")
+            };
 
-      SetupHttpClient(response);
+            SetupHttpClient(response);
 
-      var repository = new FoodTruckInfoHttpRepository(new FoodTruckFinderConfig { Url = "https://www.xyz.com/" }, _httpClientFactoryMock.Object);
+            var repository = new FoodTruckInfoHttpRepository(new FoodTruckFinderConfig { Url = "https://www.xyz.com/" }, _httpClientFactoryMock.Object);
 
-      var actual = await repository.GetFoodTruckInfoJson(1, 2);
+            var actual = await repository.GetFoodTruckInfoJson(1, 2);
 
-      actual.Should().BeEquivalentTo(foodTruckInfoJsonResponses);
+            actual.Should().BeEquivalentTo(foodTruckInfoJsonResponses);
 
-      var queryParams = new Dictionary<string, string>()
-      {
-        {"latitude", "1" },
-        {"longitude", "2"}
-      };
-
-      var requestUri = QueryHelpers.AddQueryString("https://www.xyz.com/", queryParams);
-
-      _clientHandlerMock.Protected().Verify(
-        "SendAsync",
-        Times.Exactly(1),
-        ItExpr.Is<HttpRequestMessage>(x =>
-        x.Headers.GetValues("Accept").FirstOrDefault() == "application/json" &&
-        x.Method == HttpMethod.Get &&
-        x.RequestUri.ToString() == requestUri
-     ), ItExpr.IsAny<CancellationToken>());
-  }
-
-    [TestMethod]
-    public async Task GetFoodTruckInfoJsonReturnsNull()
-    {
-      var response = new HttpResponseMessage(HttpStatusCode.OK)
-      {
-        Content = new StringContent(JsonConvert.SerializeObject("malformed_json"), Encoding.UTF8, "application/json")
-      };
-
-      SetupHttpClient(response);
-
-      var repository = new FoodTruckInfoHttpRepository(new FoodTruckFinderConfig { Url = "https://www.xyz.com/" }, _httpClientFactoryMock.Object);
-
-      var actual = await repository.GetFoodTruckInfoJson(1, 2);
-
-      actual.Should().BeNull();
-
-      var queryParams = new Dictionary<string, string>()
+            var queryParams = new Dictionary<string, string>()
       {
         {"latitude", "1" },
         {"longitude", "2"}
       };
 
-      var requestUri = QueryHelpers.AddQueryString("https://www.xyz.com/", queryParams);
+            var requestUri = QueryHelpers.AddQueryString("https://www.xyz.com/", queryParams);
 
-      _clientHandlerMock.Protected().Verify(
-        "SendAsync",
-        Times.Exactly(1),
-        ItExpr.Is<HttpRequestMessage>(x =>
-        x.Headers.GetValues("Accept").FirstOrDefault() == "application/json" &&
-        x.Method == HttpMethod.Get &&
-        x.RequestUri.ToString() == requestUri
-     ), ItExpr.IsAny<CancellationToken>());
+            _clientHandlerMock.Protected().Verify(
+              "SendAsync",
+              Times.Exactly(1),
+              ItExpr.Is<HttpRequestMessage>(x =>
+              x.Headers.GetValues("Accept").FirstOrDefault() == "application/json" &&
+              x.Method == HttpMethod.Get &&
+              x.RequestUri.ToString() == requestUri
+           ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestMethod]
+        public async Task GetFoodTruckInfoJsonReturnsNull()
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject("malformed_json"), Encoding.UTF8, "application/json")
+            };
+
+            SetupHttpClient(response);
+
+            var repository = new FoodTruckInfoHttpRepository(new FoodTruckFinderConfig { Url = "https://www.xyz.com/" }, _httpClientFactoryMock.Object);
+
+            var actual = await repository.GetFoodTruckInfoJson(1, 2);
+
+            actual.Should().BeNull();
+
+            var queryParams = new Dictionary<string, string>()
+      {
+        {"latitude", "1" },
+        {"longitude", "2"}
+      };
+
+            var requestUri = QueryHelpers.AddQueryString("https://www.xyz.com/", queryParams);
+
+            _clientHandlerMock.Protected().Verify(
+              "SendAsync",
+              Times.Exactly(1),
+              ItExpr.Is<HttpRequestMessage>(x =>
+              x.Headers.GetValues("Accept").FirstOrDefault() == "application/json" &&
+              x.Method == HttpMethod.Get &&
+              x.RequestUri.ToString() == requestUri
+           ), ItExpr.IsAny<CancellationToken>());
+        }
+
+        private void SetupHttpClient(HttpResponseMessage response)
+        {
+            _clientHandlerMock
+             .Protected()
+             .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+             .ReturnsAsync(response);
+
+            var httpClient = new HttpClient(_clientHandlerMock.Object);
+
+            _httpClientFactoryMock.Setup(factory => factory.CreateClient(It.IsAny<string>()))
+                .Returns(httpClient);
+        }
     }
-
-    private void SetupHttpClient(HttpResponseMessage response)
-    {
-      _clientHandlerMock
-       .Protected()
-       .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-       .ReturnsAsync(response);
-
-      var httpClient = new HttpClient(_clientHandlerMock.Object);
-
-      _httpClientFactoryMock.Setup(factory => factory.CreateClient(It.IsAny<string>()))
-          .Returns(httpClient);
-    }
-  }
 }

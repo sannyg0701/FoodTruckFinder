@@ -7,27 +7,27 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodTruckFinder
 {
-  /// <summary>
-  /// Class that builds the IoC container for the service.
-  /// </summary>
-  public class Startup
-  {
-    public IConfiguration Configuration { get; }
-
-    public Startup()
+    /// <summary>
+    /// Class that builds the IoC container for the service.
+    /// </summary>
+    public class Startup
     {
-      Configuration = new ConfigurationBuilder()
-          .AddJsonFile("appsettings.json")
-          .Build();
-    }
+        public IConfiguration Configuration { get; }
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-      services.AddHttpClient();
+        public Startup()
+        {
+            Configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+        }
 
-      services.AddSingleton(Configuration.GetSection(nameof(FoodTruckFinderConfig)).Get<FoodTruckFinderConfig>());
-      services.AddSingleton<IFoodTruckInfoRepository, FoodTruckInfoHttpRepository>();
-      services.AddSingleton<IFoodTruckInfoService, FoodTruckInfoService>();
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddHttpClient();
+
+            services.AddSingleton(Configuration.GetSection(nameof(FoodTruckFinderConfig)).Get<FoodTruckFinderConfig>());
+            services.AddSingleton<IFoodTruckInfoRepository, FoodTruckInfoHttpRepository>();
+            services.AddSingleton<IFoodTruckInfoService, FoodTruckInfoService>();
+        }
     }
-  }
 }
